@@ -127,7 +127,22 @@ Setelah selesai, kamu akan dapat URL publik seperti:
 https://rest-api.vercel.app
 ```
 
-6. **Database Postgres**: konfigurasi seperti ini (pakai `POSTGRES_URL_NON_POOLING`):
+6. **Database Postgres**
+
+Di halaman proyek vercel kalian, buka stores (contoh: **vercel.com/_nama-teams_/_nama-proyek_/stores**)
+- [Create Database]
+  - Region: `Singapore`
+  - Public Env Variabel Prefix: `PG_`
+  - Instalation Plans: Free
+- [Continue]
+  - Database Name: `supabase-rest-api`
+- [Create]
+- Salin environment variabel ke `.env.local`
+- [Open In Supabase]
+- [New table]
+  - name: mahasiswa (id, nama [varchar], jurusan [varchar], created_at [timestamps now()])
+
+konfigurasi seperti ini (pakai `POSTGRES_URL_NON_POOLING`):
 ```bash
 DB_TYPE: pgsql
 DB_HOST: aws-1-ap-southeast-1.pooler.supabase.com
@@ -136,7 +151,9 @@ DB_USER: postgres.itzxopxshpvcjotxxxxx
 DB_PASS: ETnWsKT1Q9xxxxx
 DB_SSLMODE: require
 ```
-- Akses di HeidiSQL:
+**(dalam proyek vercel) Buka Settings > Environment Variables:** Tambahkan ke environment variabel proyek (letak di **vercel.com/_nama-teams_/_nama-proyek_/settings/environment-variables**) 
+
+- (opsional) Akses di HeidiSQL:
   - Network Type: **PostgreSQL (TCP/IP)**
   - Library: **libpq-12.dll**
 
