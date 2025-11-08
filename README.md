@@ -67,7 +67,7 @@ curl -X DELETE http://localhost:3000/mahasiswa/1 \
 ### Alternatif
 - Postman (Aplikasi)
 - Thunder Client (Ekstensi VSCode)
-- EchoAPI for VS Code (Ekstensi VSCode)
+- EchoAPI for VS Code (Ekstensi VSCode) **[🌟 Disarankan]**
 
 ## Deployment
 
@@ -99,7 +99,8 @@ require __DIR__ . "/../index.php";
   ]
 }
 ```
-2. Install Vercel CLI
+2. Install Vercel CLI  
+Anda perlu [install NPM](https://www.google.com/search?q=install+node+package+manager+di+windows) (Node Package Manager) lebih dulu
 ```bash
 npm install -g vercel
 ```
