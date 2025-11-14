@@ -14,7 +14,7 @@ class Database
         $this->type = getenv('DB_TYPE') ?: 'mysql'; // vercel pakai pgsql
         $this->host = getenv('DB_HOST') ?: 'localhost';
         $this->port = getenv('DB_PORT') ?: '3306';
-        $this->db_name = getenv('DB_NAME') ?: 'kampus_db';
+        $this->db_name = getenv('DB_NAME') ?: 'rest_api_db'; // <-- INI YANG DIUBAH
         $this->username = getenv('DB_USER') ?: 'root';
         $this->password = getenv('DB_PASS') ?: '';
         $this->sslmode = getenv('DB_SSLMODE') ?: ''; // vercel pakai require
@@ -35,16 +35,20 @@ class Database
         } catch (PDOException $e) {
             // Jika database belum ada, buat dulu
             if (strpos($e->getMessage(), 'Unknown database') !== false) {
-                $tempConn = new PDO("mysql:host={$this->host}", $this->username, $this->password);
-                $tempConn->exec("CREATE DATABASE IF NOT EXISTS {$this->db_name}");
-                $tempConn = null;
+                try {
+                    $tempConn = new PDO("mysql:host={$this->host}", $this->username, $this->password);
+                    $tempConn->exec("CREATE DATABASE IF NOT EXISTS {$this->db_name}");
+                    $tempConn = null;
 
-                // Reconnect ke database yang baru dibuat
-                $this->conn = new PDO(
-                    "mysql:host={$this->host};dbname={$this->db_name}",
-                    $this->username,
-                    $this->password
-                );
+                    // Reconnect ke database yang baru dibuat
+                    $this->conn = new PDO(
+                        "mysql:host={$this->host};dbname={$this->db_name}",
+                        $this->username,
+                        $this->password
+                    );
+                } catch (PDOException $eCreate) {
+                    die(json_encode(["error" => "Gagal membuat database: " . $eCreate->getMessage()]));
+                }
             } else {
                 die(json_encode(["error" => "Koneksi gagal: " . $e->getMessage()]));
             }
@@ -60,7 +64,7 @@ class Database
         if ($this->type === 'pgsql') {
             $sql = "
             CREATE TABLE IF NOT EXISTS mahasiswa (
-                id SERIAL PRIMARY KEY,                  -- AUTO_INCREMENT versi PostgreSQL
+                id SERIAL PRIMARY KEY,              -- AUTO_INCREMENT versi PostgreSQL
                 nama VARCHAR(100) NOT NULL,
                 jurusan VARCHAR(100) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -77,6 +81,10 @@ class Database
             ";
         }
 
-        $this->conn->exec($sql);
+        try {
+            $this->conn->exec($sql);
+        } catch (PDOException $e) {
+            die(json_encode(["error" => "Gagal membuat tabel: " . $e->getMessage()]));
+        }
     }
 }
